@@ -1,0 +1,6 @@
+@wx.MiniApi_HostAddress = http://localhost:5191
+
+GET {{wx.MiniApi_HostAddress}}/weatherforecast
+Accept: application/json
+
+###
