@@ -20,9 +20,9 @@ jobs:
         dotnet-version: 9.0.x  
 
     - name: Restore dependencies
-      working-directory: src/
+      working-directory: ./
       run: dotnet restore wx.sln
 
     - name: Build solution
-      working-directory: src/
+      working-directory: ./
       run: dotnet build wx.sln --configuration Release --no-restore
