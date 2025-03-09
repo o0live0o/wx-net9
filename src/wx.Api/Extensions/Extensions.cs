@@ -14,9 +14,7 @@ public static class Extensions
             cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             //cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
         });
-
         builder.Services.AddSingleton<IValidator<CreateStockCommand>, CreateStockCommandValidator>();
-
     }
 
     public static void RegisterHttpClient(this IHostApplicationBuilder builder)

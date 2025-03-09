@@ -12,8 +12,12 @@ namespace wx.Application.Stock
     {
         public async Task Handle(OrderCreateEvent notification, CancellationToken cancellationToken)
         {
+            var _lock = new Lock();
+            lock(_lock)
+            {
+
+            }
             await Task.Delay(5000);
-            throw new NotImplementedException();
         }
     }
 }

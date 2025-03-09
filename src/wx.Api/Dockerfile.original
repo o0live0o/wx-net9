@@ -12,11 +12,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Directory.Packages.props", "."]
 COPY ["src/wx.Api/wx.Api.csproj", "src/wx.Api/"]
-COPY ["src/wx.Application/wx.Application.csproj", "src/wx.Application/"]
-COPY ["src/wx.Core/wx.Core.csproj", "src/wx.Core/"]
-COPY ["src/wx.Infrastructure/wx.Infrastructure.csproj", "src/wx.Infrastructure/"]
 RUN dotnet restore "./src/wx.Api/wx.Api.csproj"
 COPY . .
 WORKDIR "/src/src/wx.Api"

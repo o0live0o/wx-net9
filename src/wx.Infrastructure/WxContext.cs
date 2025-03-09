@@ -15,6 +15,7 @@ public class WxContext : DbContext, IUnitOfWork
 
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     public bool HasActiveTransaction => _currentTransaction != null;
 
