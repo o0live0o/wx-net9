@@ -15,17 +15,11 @@ namespace wx.Api.Controllers;
 
 public class TestController : WxController
 {
-    private readonly IMediator _mediator;
-    private readonly IEventBus _eventBus;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ILogger<TestController> _logger;
 
-    public TestController(IMediator mediator, IEventBus eventBus, IHttpClientFactory httpClientFactory, ILogger<TestController> logger)
+    public TestController(IHttpClientFactory httpClientFactory)
     {
-        _mediator = mediator;
-        _eventBus = eventBus;
         _httpClientFactory = httpClientFactory;
-        _logger = logger;
     }
 
 
