@@ -5,6 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Queries\StockQuery\**" />
+    <EmbeddedResource Remove="Queries\StockQuery\**" />
+    <None Remove="Queries\StockQuery\**" />
+  </ItemGroup>
   <ItemGroup>
 		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="MediatR" />
@@ -13,8 +19,5 @@
   <ItemGroup>
     <ProjectReference Include="..\wx.Core\wx.Core.csproj" />
     <ProjectReference Include="..\wx.Infrastructure\wx.Infrastructure.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Queries\StockQuery\" />
   </ItemGroup>
 </Project>

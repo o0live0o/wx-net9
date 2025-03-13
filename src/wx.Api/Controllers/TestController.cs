@@ -9,6 +9,7 @@ using System.Threading;
 using wx.Application;
 using wx.Application.Events;
 using wx.Application.Stock.Create;
+using wx.Core.Entities;
 using wx.Core.WorkFlow;
 
 namespace wx.Api.Controllers;
@@ -22,6 +23,12 @@ public class TestController : WxController
         _httpClientFactory = httpClientFactory;
     }
 
+    [HttpGet]
+    public IActionResult Create()
+    {
+        Category category = new Category("电子产品", null);
+        return Ok();
+    }
 
     [HttpGet("AI")]
     public async Task TestAI()

@@ -10,8 +10,10 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         builder.ToTable("Categories");
 
+        builder.Ignore(p => p.DomainEvents);
+
         builder.HasOne(c => c.Parent)
-            .WithMany(c => c.Children)
+            .WithMany(c => c.Childrens)
             .HasPrincipalKey(c => c.ParentId)
             .OnDelete(DeleteBehavior.Restrict);
 

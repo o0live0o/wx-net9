@@ -1,4 +1,3 @@
-using wx.Application.Queries;
 using wx.MiniApi.Apis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructureServices();
-builder.Services.AddScoped<IStockQuery, StockQuery>();
 //var withApiVersioning = builder.Services.AddApiVersioning();
 //builder.AddDefaultOpenApi(withApiVersioning);
 builder.Services.AddEndpointsApiExplorer();

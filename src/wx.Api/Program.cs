@@ -5,6 +5,7 @@ using wx.Application.Events;
 using Serilog;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
+using wx.Application.Fearures.Categories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -19,8 +20,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructureServices();
 builder.AddApplicationServices();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
 builder.Services.AddSingleton<IEventBus, EventBus>();
 builder.Services.AddSingleton<InMemoryMessageQueue>();
 builder.Services.AddHostedService<IntergrationEventProcessorJob>();

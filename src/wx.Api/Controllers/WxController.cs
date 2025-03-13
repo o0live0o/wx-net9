@@ -6,7 +6,6 @@ namespace wx.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
     public class WxController : ControllerBase
     {
     }
