@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
 
