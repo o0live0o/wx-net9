@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   seq:
     image: datalust/seq:latest
@@ -7,6 +9,11 @@ services:
       - "8082:80"
     environment:
       - ACCEPT_EULA=Y
+    volumes:
+      - seq_data:/data
+    networks:
+      - wx-network
+
   db:
     container_name: wx-db
     image: postgres:latest
@@ -16,6 +23,15 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - wx-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   wx.api:
     image: ${DOCKER_REGISTRY-}wxapi
@@ -25,5 +41,19 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=wx;Username=postgres;Password=postgres
+      - SEQ_SERVER_URL=http://seq:5341
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    networks:
+      - wx-network
+
+volumes:
+  postgres_data:
+  seq_data:
+
+networks:
+  wx-network:
+    driver: bridge

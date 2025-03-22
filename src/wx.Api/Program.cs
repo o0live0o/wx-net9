@@ -10,8 +10,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using NSwag.Generation.Processors.Security;
 using NSwag;
+using NSwag.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, loggerConfig) =>
 {
@@ -52,9 +55,9 @@ builder.Services.AddOpenApiDocument(
       doc.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer"));
   }
 );
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.AddApplicationServices();
-//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
 builder.Services.AddSingleton<IEventBus, EventBus>();
@@ -78,13 +81,18 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod());
 });
 var app = builder.Build();
-
+await app.Services.MigrateDatabaseAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     //app.MapOpenApi();
     app.UseOpenApi();
-    app.UseSwaggerUi();
+
+    app.UseSwaggerUi(settings =>
+    {
+        settings.OAuth2Client = new OAuth2ClientSettings();
+        settings.OAuth2Client.ClientId = "a7c66bf1-300f-462a-8258-f57414f21ec2";
+    });
 }
 
 app.UseCors("AllowAllOrigin");

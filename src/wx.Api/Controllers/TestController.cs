@@ -26,8 +26,7 @@ public class TestController : WxController
     [HttpGet]
     public IActionResult Create()
     {
-        Category category = new Category("电子产品", null);
-        return Ok();
+        throw new Exception("Unhandle error");
     }
 
     [HttpGet("AI")]
