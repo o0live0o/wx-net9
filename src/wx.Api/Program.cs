@@ -1,17 +1,12 @@
-using System.Net;
-using System.Reflection;
 using wx.Api.Extensions;
 using wx.Application.Events;
 using Serilog;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Resources;
 using wx.Application.Fearures.Categories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using NSwag.Generation.Processors.Security;
 using NSwag;
 using NSwag.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
