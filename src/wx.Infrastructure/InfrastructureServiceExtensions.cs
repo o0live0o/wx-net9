@@ -7,11 +7,18 @@ namespace wx.Infrastructure;
 
 public static class InfrastructureServiceExtensions
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,string connectionString)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<WxContext>(options =>
         {
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(connectionString, sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorCodesToAdd: null
+                );
+            });
             //options.UseNpgsql(@"Host=127.0.0.1;Username=postgres;Password=123456;Database=wx01");
         });
 
@@ -28,7 +35,7 @@ public static class InfrastructureServiceExtensions
         {
             await context.Database.MigrateAsync();
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }

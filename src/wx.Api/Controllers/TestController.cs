@@ -26,6 +26,7 @@ public class TestController : WxController
     [HttpGet]
     public IActionResult Create()
     {
+        Guid.CreateVersion7();
         throw new Exception("Unhandle error");
     }
 
