@@ -65,7 +65,7 @@ builder.Services.AddSingleton<IEventBus, EventBus>();
 builder.Services.AddSingleton<InMemoryMessageQueue>();
 builder.Services.AddHostedService<IntergrationEventProcessorJob>();
 builder.Services.AddHttpClient();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR();1
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(options =>
 {
     builder.Configuration.Bind("AzureAd", options);
