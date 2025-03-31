@@ -23,13 +23,6 @@ public class TestController : WxController
         _httpClientFactory = httpClientFactory;
     }
 
-    [HttpGet]
-    public IActionResult Create()
-    {
-        Guid.CreateVersion7();
-        throw new Exception("Unhandle error");
-    }
-
     [HttpGet("AI")]
     public async Task TestAI()
     {
