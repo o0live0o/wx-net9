@@ -26,3 +26,13 @@ jobs:
     - name: Build solution
       working-directory: ./
       run: dotnet build wx.sln --configuration Release --no-restore
+
+      if: success()
+    
+    - name: Check Build Status
+      if: always()
+      run: |
+        if [ $? -ne 0 ]; then
+          echo "Build failed"
+          exit 1
+        fi
