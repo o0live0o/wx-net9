@@ -18,7 +18,7 @@ public class CategoryController(IMediator mediator, ICategoryQuery categoryQuery
     }
 
     [HttpGet]
-    [Authorize(Roles = "Super-Admin,Admin1,Normal")]
+    //[Authorize(Roles = "Super-Admin,Admin1,Normal")]
 
     public async Task<IActionResult> QueryAsync()
     {

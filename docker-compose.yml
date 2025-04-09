@@ -41,8 +41,11 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
+    volumes:
+      - E:/project/data:/app/data
+      - E:/project/files:/app/files
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Database=wx;Username=postgres;Password=postgres
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/main.db
       - SEQ_SERVER_URL=http://seq:5341
     depends_on:
       db:

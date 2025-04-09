@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wx.Infrastructure;
 
@@ -10,9 +11,11 @@ using wx.Infrastructure;
 namespace wx.Infrastructure.Migrations
 {
     [DbContext(typeof(WxContext))]
-    partial class WxContextModelSnapshot : ModelSnapshot
+    [Migration("20250409165853_InitialCreate1")]
+    partial class InitialCreate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");

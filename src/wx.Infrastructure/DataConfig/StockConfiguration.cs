@@ -11,7 +11,8 @@ public class StockConfiguration : IEntityTypeConfiguration<Stock>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
-               .UseHiLo("catalog_type_hilo")
+               //SQLite does not support sequences.
+               //.UseHiLo("catalog_type_hilo")
                .IsRequired();
 
         builder.Property(x => x.Code)
