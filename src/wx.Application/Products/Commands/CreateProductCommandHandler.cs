@@ -12,7 +12,7 @@ public class CreateProductCommandHandler(WxContext context) : IRequestHandler<Cr
     public async Task<Product> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var brand = new ProductBrandVO(request.Brand,request.Model);
-        var productNo = Guid.NewGuid().ToString("N2");
+        var productNo = Guid.NewGuid().ToString("N");
         var product = new Product(productNo, request.Name, request.CategoryId, brand, request.Description);
 
         if (request.Attrs?.Count() > 0)

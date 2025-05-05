@@ -1,16 +1,8 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
-using Polly;
-using Serilog.Context;
-using System.Net.Http;
 using System.Text;
-using System.Threading;
-using wx.Application;
-using wx.Application.Events;
-using wx.Application.Stock.Create;
-using wx.Core.Entities;
-using wx.Core.WorkFlow;
+using wx.Infrastructure.LLM;
 
 namespace wx.Api.Controllers;
 
@@ -21,6 +13,24 @@ public class TestController : WxController
     public TestController(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
+    }
+
+    [HttpGet("chat")]
+    public async Task<IActionResult> TestChat(CancellationTokenSource cts)
+    {
+        LlmConfig config = new LlmConfig();
+        config.BaseUrl = "https://spark-api-open.xf-yun.com/v1";
+        config.ApiSecret = "";
+        config.ApiKey = "";
+        LlmProviderFactory.Instance.Initialize(config);
+        var llm = LlmProviderFactory.Instance.GetProvider("spark");
+
+        Dictionary<string, object> dic = new Dictionary<string, object>();
+        dic["model"] = "lite";
+        dic["stream"] = true;
+
+        var str = await llm.ChatCompletionsAsync(new[] { new  LlmMessage(){ Role = "user", Content = "你是谁" } }, dic, cts.Token);
+        return Ok(str);
     }
 
     [HttpGet("AI")]
