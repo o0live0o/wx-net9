@@ -22,11 +22,9 @@ public class PageQueryRequest
         set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
     }
 
-    // 排序参数
     public string SortBy { get; set; }
     public SortDirection SortDirection { get; set; } = SortDirection.Asc;
 
-    // 动态过滤条件（JSON格式）
     public string Filters { get; set; }
 }
 

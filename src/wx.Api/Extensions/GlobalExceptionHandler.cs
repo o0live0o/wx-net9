@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace wx.Api.Extensions;
@@ -11,6 +12,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         var problemDetail = exception switch
         {
             KeyNotFoundException ex => HandleKeyNotFoundException(ex, httpContext),
+            ValidationException ex => HandleValidationException(ex, httpContext),
             _ => HandleUnhandleException(exception, httpContext)
 
         };
@@ -38,6 +40,18 @@ public class GlobalExceptionHandler : IExceptionHandler
     }
 
     private ProblemDetails HandleKeyValidationException(KeyNotFoundException ex, HttpContext httpContext)
+    {
+        return new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "Validation Error",
+            Detail = ex.Message,
+            Instance = httpContext.Request.Path,
+            Type = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/errors/validation-error"
+        };
+    }
+
+    private ProblemDetails HandleValidationException(ValidationException ex, HttpContext httpContext)
     {
         return new ProblemDetails
         {

@@ -44,8 +44,10 @@ services:
     volumes:
       - E:/project/data:/app/data
       - E:/project/files:/app/files
+      - E:/project/images:/app/images
     environment:
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/main.db
+      - FileStorage__ImagePath=/app/images
       - SEQ_SERVER_URL=http://seq:5341
     depends_on:
       db:
