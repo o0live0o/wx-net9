@@ -46,7 +46,7 @@ public class ProductController(IMediator mediator, IProductQuery productQuery) :
                                                                 request.ProductAttrs);
         var product = await mediator.Send(command);
 
-        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+        return CreatedAtAction(nameof(GetProduct), new { productId = product.Id }, product);
     }
 
 

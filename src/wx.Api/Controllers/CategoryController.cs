@@ -13,7 +13,7 @@ public class CategoryController(IMediator mediator, ICategoryQuery categoryQuery
 {
     [HttpGet]
     [ProducesResponseType(typeof(PaginatedList<CategoryDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories([FromQuery] PaginationRequest request)
+    public async Task<ActionResult<PaginatedList<CategoryDto>>> GetCategories([FromQuery] PaginationRequest request)
     {
         var categories = await categoryQuery.GetCategoriesAsync(request);
         return Ok(categories);
@@ -40,7 +40,7 @@ public class CategoryController(IMediator mediator, ICategoryQuery categoryQuery
             command.GetType().Name,
             command);
         var result = await mediator.Send(command);
-        return CreatedAtAction(nameof(GetCategory), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetCategory), new { categoryId = result.Id }, result);
     }
 
     [HttpDelete("{categoryId:int}")]
@@ -107,9 +107,13 @@ public class CategoryController(IMediator mediator, ICategoryQuery categoryQuery
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CategoryAttrDto>> CreateCategoryAttribute(
     [FromRoute] int categoryId,
-    [FromBody][Required] CreateCategoryAttrCommand command)
+    [FromBody][Required] CategoryAttrDto request)
     {
-        command.CategoryId = categoryId;
+        CreateCategoryAttrCommand command = new CreateCategoryAttrCommand()
+        {
+            CategoryId = categoryId,
+            Attr = request
+        };
         var result = await mediator.Send(command);
 
         return CreatedAtAction(
