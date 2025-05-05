@@ -26,8 +26,9 @@ namespace wx.Application.Behaviors
             {
                 _logger.LogWarning("Validation errors - {CommandType} - Command: {@Command} - Errors: {@ValidationErrors}", "Test", request, failures);
 
-                throw new Exception(
-                    $"Command Validation Errors for type {typeof(TRequest).Name}", new ValidationException("Validation exception", failures));
+                throw new ValidationException($"Validation exception {string.Join(", ", failures.Select(f => $"{f.PropertyName}: {f.ErrorMessage}"))}", failures);
+                //throw new Exception(
+                //    $"Command Validation Errors for type {typeof(TRequest).Name}", new ValidationException("Validation exception", failures));
             }
 
             return await next();

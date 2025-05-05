@@ -13,9 +13,8 @@ public class WxContext : DbContext, IUnitOfWork
 
     public WxContext(DbContextOptions<WxContext> options) : base(options) { }
 
-    public DbSet<Stock> Stocks { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Product> Products { get; set; }
 
     public bool HasActiveTransaction => _currentTransaction != null;
 
@@ -77,6 +76,7 @@ public class WxContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfiguration(new StockConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductConfiguration());
     }
 }

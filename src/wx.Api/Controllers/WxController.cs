@@ -5,7 +5,7 @@ using Serilog.Context;
 namespace wx.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WxController : ControllerBase
     {
     }

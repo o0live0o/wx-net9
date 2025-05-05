@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using wx.Core.Entities;
 using wx.Core.SeedWork;
 
 namespace wx.Infrastructure;
@@ -11,14 +14,32 @@ public static class InfrastructureServiceExtensions
     {
         services.AddDbContext<WxContext>(options =>
         {
-            options.UseNpgsql(connectionString, sqlOptions =>
-            {
-                sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 3,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorCodesToAdd: null
-                );
+            var connection = new SqliteConnection(
+                new SqliteConnectionStringBuilder(connectionString)
+                {
+                    ForeignKeys = true  
+                }.ToString());
+
+            options.UseSqlite(connection, sqliteOptions => {
+                sqliteOptions.CommandTimeout(30);
+                sqliteOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
+                sqliteOptions.UseRelationalNulls();
+
             });
+            
+            #if DEBUG
+            options.EnableSensitiveDataLogging();
+            options.EnableDetailedErrors();
+            options.LogTo(Console.WriteLine);
+            #endif
+            // options.UseNpgsql(connectionString, sqlOptions =>
+            // {
+            //     sqlOptions.EnableRetryOnFailure(
+            //         maxRetryCount: 3,
+            //         maxRetryDelay: TimeSpan.FromSeconds(30),
+            //         errorCodesToAdd: null
+            //     );
+            // });
             //options.UseNpgsql(@"Host=127.0.0.1;Username=postgres;Password=123456;Database=wx01");
         });
 
@@ -29,11 +50,17 @@ public static class InfrastructureServiceExtensions
     public static async Task MigrateDatabaseAsync(this IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<WxContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<WxContext>();
 
         try
         {
-            await context.Database.MigrateAsync();
+            await dbContext.Database.MigrateAsync();
+
+            if (!await dbContext.Categories.AnyAsync(c => c.Id == 1))
+            {
+                dbContext.Categories.Add(new Category("Root", null));
+                await dbContext.SaveChangesAsync();
+            }
         }
         catch
         {
