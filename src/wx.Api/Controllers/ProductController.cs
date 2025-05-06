@@ -90,7 +90,7 @@ public class ProductController(IMediator mediator, IProductQuery productQuery) :
         [FromHeader(Name = "x-requestid")] Guid requestId,
         [FromBody] AddProductAttrRequest request)
     {
-        var command = new AddProductAttrCommand(productId, request.AttrId, request.Value);
+        var command = new AddProductAttrCommand(productId, request.Key, request.Value);
         var attribute = await mediator.Send(command);
         return CreatedAtAction(nameof(GetProductAttributes), new { productId }, attribute);
     }

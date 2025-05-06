@@ -11,7 +11,8 @@ public class UpdateProductAttrCommandHandler(WxContext context) : IRequestHandle
     public async Task<bool> Handle(UpdateProductAttrCommand request, CancellationToken cancellationToken)
     {
         var product = await context.Products.Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == request.ProductId) ?? throw new KeyNotFoundException();
-        product.SetAttribute(request.CategoryAttrId, request.Value);
+
+        product.UpdateAttribute(request.AttrId, request.Value);
         await context.SaveChangesAsync();
         return true;
     }

@@ -19,7 +19,7 @@ public class CreateProductCommandHandler(WxContext context) : IRequestHandler<Cr
         {
             foreach (var attr in request.Attrs)
             {
-                product.SetAttribute(attr.CategoryAttributeId, attr.Value);
+                product.SetAttribute(attr.Key, attr.Value);
             }
         }
 

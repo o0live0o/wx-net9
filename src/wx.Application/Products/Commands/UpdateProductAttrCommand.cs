@@ -1,3 +1,3 @@
 ﻿namespace wx.Application.Products;
 
-public record UpdateProductAttrCommand(int ProductId, int CategoryAttrId, string Value) : IRequest<bool>;
+public record UpdateProductAttrCommand(int ProductId, int AttrId, string Value) : IRequest<bool>;

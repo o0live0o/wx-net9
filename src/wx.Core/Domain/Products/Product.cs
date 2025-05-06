@@ -41,12 +41,12 @@ public class Product : Entity, IAggregateRoot
         Version = 1;
     }
 
-    public ProductAttribute SetAttribute(int categoryAttributeId, string value)
+    public ProductAttribute SetAttribute(string key, string value)
     {
-        var attribute = _attributes.FirstOrDefault(p => p.CategoryAttributeId == categoryAttributeId);
+        var attribute = _attributes.FirstOrDefault(p => p.Key == key);
         if (attribute == null)
         {
-            attribute = new ProductAttribute(categoryAttributeId, value);
+            attribute = new ProductAttribute(key, value);
             _attributes.Add(attribute);
         }
         else
@@ -55,6 +55,14 @@ public class Product : Entity, IAggregateRoot
         }
         Version++;
         return attribute;
+    }
+
+    public void UpdateAttribute(int attrId, string value)
+    {
+        var attribute = _attributes.FirstOrDefault(p => p.Id == attrId);
+        if (attribute == null)
+            return;
+        attribute.Update(value);
     }
 
     public void Update(string name = null, string description = null, ProductBrandVO brand = null)
@@ -71,7 +79,7 @@ public class Product : Entity, IAggregateRoot
         {
             BrandModel = brand;
         }
-        Version++;  
+        Version++;
     }
 
     public void RemoveAttr(int attrId)

@@ -1,3 +1,3 @@
 ﻿namespace wx.Application.Products;
 
-public record AddProductAttrRequest(int AttrId,string Value);
+public record AddProductAttrRequest(string Key,string Value);

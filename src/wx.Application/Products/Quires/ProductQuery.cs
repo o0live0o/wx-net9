@@ -8,7 +8,7 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
 {
     public async Task<ProductDto> GetProduct(int productId)
     {
-        var product = await context.Products.Include(p => p.Category).Include(p => p.Attributes).ThenInclude(a => a.CategoryAttribute).SingleOrDefaultAsync(p => p.Id == productId);
+        var product = await context.Products.Include(p => p.Category).Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == productId);
 
         if (product == null)
             throw new KeyNotFoundException();
@@ -16,7 +16,7 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
         var attributes = product?.Attributes?.Select(a => new ProductAttributeQueryDto
         {
             Id = a.Id,
-            Name = a.CategoryAttribute.Name,
+            Key = a.Key,
             Value = a.Value
         }).ToList();
 
@@ -74,7 +74,7 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
 
     public async Task<IEnumerable<ProductAttributeDto>> GetProductAttributes(int productId)
     {
-        var product = await context.Products.Include(p => p.Category).Include(p => p.Attributes).ThenInclude(a => a.CategoryAttribute).SingleOrDefaultAsync(p => p.Id == productId);
+        var product = await context.Products.Include(p => p.Category).Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == productId);
 
         if (product == null)
             throw new KeyNotFoundException();
