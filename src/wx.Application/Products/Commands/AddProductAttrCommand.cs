@@ -1,3 +1,3 @@
 ﻿namespace wx.Application.Products;
 
-public record AddProductAttrCommand(int ProductId, int CategoryAttrId, string Value) : IRequest<ProductAttributeDto>;
+public record AddProductAttrCommand(int ProductId, string Key, string Value) : IRequest<ProductAttributeDto>;

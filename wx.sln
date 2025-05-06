@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0E70F3B1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wx.Shared.Tests", "tests\wx.Shared.Tests\wx.Shared.Tests.csproj", "{3369A25C-97EC-4386-8897-FF054554C4C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wx.Api.Tests", "tests\wx.Api.Tests\wx.Api.Tests.csproj", "{E800CD21-B90F-40C8-A1A3-3B41B6E1CABD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{3369A25C-97EC-4386-8897-FF054554C4C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3369A25C-97EC-4386-8897-FF054554C4C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3369A25C-97EC-4386-8897-FF054554C4C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E800CD21-B90F-40C8-A1A3-3B41B6E1CABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E800CD21-B90F-40C8-A1A3-3B41B6E1CABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E800CD21-B90F-40C8-A1A3-3B41B6E1CABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E800CD21-B90F-40C8-A1A3-3B41B6E1CABD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,5 +79,6 @@ Global
 		{E8FEDD97-4A9B-47EB-8DCF-41AD268DD3B1} = {23782499-9DF3-41D4-910F-9195C028BCCC}
 		{349C1B08-6131-4563-8745-412BE93D0AF5} = {23782499-9DF3-41D4-910F-9195C028BCCC}
 		{3369A25C-97EC-4386-8897-FF054554C4C5} = {0E70F3B1-9E28-4E2D-AD89-CD3D866FAAD5}
+		{E800CD21-B90F-40C8-A1A3-3B41B6E1CABD} = {0E70F3B1-9E28-4E2D-AD89-CD3D866FAAD5}
 	EndGlobalSection
 EndGlobal

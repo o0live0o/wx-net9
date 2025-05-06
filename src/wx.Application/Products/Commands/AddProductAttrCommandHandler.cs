@@ -13,8 +13,8 @@ public class AddProductAttrCommandHandler(WxContext context) : IRequestHandler<A
         var product = await context.Products.Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == request.ProductId) ?? 
             throw new KeyNotFoundException();
 
-        var attr = product.SetAttribute(request.CategoryAttrId, request.Value);
+        var attr = product.SetAttribute(request.Key, request.Value);
         await context.SaveChangesAsync();
-        return new ProductAttributeDto() { AttrId = attr.Id, CategoryAttributeId  = attr.Id, Value = attr.Value };
+        return new ProductAttributeDto() { AttrId = attr.Id, Key  = attr.Key, Value = attr.Value };
     }
 }

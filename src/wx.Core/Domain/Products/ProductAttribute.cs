@@ -10,18 +10,19 @@ namespace wx.Core.Entities;
 public class ProductAttribute : Entity
 {
     public int ProductId { get; private set; }
+
     [JsonIgnore]
     public Product Product { get; private set; }
-    public int CategoryAttributeId {  get; set; }
-    [JsonIgnore]
-    public CategoryAttribute CategoryAttribute { get; set; }
+
+    public string Key { get; private set; }
+
     public string Value { get; set; }
 
     protected ProductAttribute() { }
 
-    public ProductAttribute(int categoryAttributeId, string value)
+    public ProductAttribute(string key, string value)
     {
-        CategoryAttributeId = categoryAttributeId;
+        Key = key;
         Value = value;
     }
 

@@ -17,7 +17,7 @@ public record CreateProductRequest
 public class ProductAttributeDto
 {
     public int AttrId { get; set; }
-    public int CategoryAttributeId { get; set; }
+    public string Key { get; set; }
     public string Value { get; set; }
 
     public static ProductAttributeDto FromEntity(ProductAttribute attr)
@@ -25,7 +25,7 @@ public class ProductAttributeDto
         return new ProductAttributeDto()
         {
             AttrId = attr.Id,
-            CategoryAttributeId = attr.CategoryAttributeId,
+            Key = attr.Key,
             Value = attr.Value
         };
     }
