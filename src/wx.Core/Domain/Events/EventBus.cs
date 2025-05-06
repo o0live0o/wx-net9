@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace wx.Application.Events;
+namespace wx.Core.Domain.Events;
 
 public class EventBus(InMemoryMessageQueue queue) : IEventBus
 {

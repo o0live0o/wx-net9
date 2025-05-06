@@ -6,7 +6,7 @@ internal class DeleteProductAttrCommandHandler(WxContext context) : IRequestHand
     {
         var product = await context.Products.Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == request.ProductId) ?? throw new KeyNotFoundException();
         product.RemoveAttr(request.AttrId);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
         return true;
     }
 }

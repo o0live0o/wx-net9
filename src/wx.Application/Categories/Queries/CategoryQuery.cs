@@ -11,7 +11,7 @@ public class CategoryQuery(WxContext context) : ICategoryQuery
 {
     public async Task<PaginatedList<CategoryDto>> GetCategoriesAsync(PaginationRequest request)
     {
-        var query = context.Categories.AsQueryable();
+        var query = context.Categories.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(request.SearchTerm))
         {
@@ -33,7 +33,7 @@ public class CategoryQuery(WxContext context) : ICategoryQuery
 
     public async Task<CategoryDto> GetCategoryByIdAsync(int id)
     {
-        var category = await context.Categories.Include(p => p.Attributes).FirstOrDefaultAsync(p => p.Id == id);
+        var category = await context.Categories.AsNoTracking().Include(p => p.Attributes).FirstOrDefaultAsync(p => p.Id == id);
 
         if (category is null)
             throw new KeyNotFoundException();

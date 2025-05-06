@@ -23,7 +23,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
             }
         }
         _repository.Add(category);
-        await _repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
         return CategoryDto.FromEntity(category);
     }

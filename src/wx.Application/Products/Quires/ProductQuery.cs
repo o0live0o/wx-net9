@@ -8,7 +8,7 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
 {
     public async Task<ProductDto> GetProduct(int productId)
     {
-        var product = await context.Products.Include(p => p.Category).Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == productId);
+        var product = await context.Products.AsNoTracking().Include(p => p.Category).Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == productId);
 
         if (product == null)
             throw new KeyNotFoundException();
@@ -36,7 +36,7 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
 
     public async Task<PaginatedList<ProductDto>> GetProducts(PaginationRequest request)
     {
-        var query = context.Products.Include(p => p.Category).AsQueryable();
+        var query = context.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
         if (!string.IsNullOrEmpty(request.SearchTerm))
         {
             query = query.Where(x => x.Description.Contains(request.SearchTerm));
@@ -61,6 +61,16 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
         return new PaginatedList<ProductDto>(items, totalCount, request.PageIndex, request.PageSize); ;
     }
 
+    public async Task<IEnumerable<ProductAttributeDto>> GetProductAttributes(int productId)
+    {
+        var product = await context.Products.AsNoTracking().Include(p => p.Category).Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == productId);
+
+        if (product == null)
+            throw new KeyNotFoundException();
+
+        return product.Attributes?.Select(p => ProductAttributeDto.FromEntity(p));
+    }
+
     private static IQueryable<Product> ApplyOrder(IQueryable<Product> query, PaginationRequest request)
     {
         return request.OrderBy?.ToLower() switch
@@ -70,15 +80,5 @@ public class ProductQuery(WxContext context, ILogger<ProductQuery> logger) : IPr
                 : query.OrderBy(x => x.Name),
             _ => query.OrderBy(x => x.Id)
         };
-    }
-
-    public async Task<IEnumerable<ProductAttributeDto>> GetProductAttributes(int productId)
-    {
-        var product = await context.Products.Include(p => p.Category).Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == productId);
-
-        if (product == null)
-            throw new KeyNotFoundException();
-
-        return product.Attributes?.Select(p => ProductAttributeDto.FromEntity(p));
     }
 }

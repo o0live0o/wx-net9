@@ -9,6 +9,7 @@ using wx.Application.Stock;
 using wx.Application.Stock.Create;
 using wx.Core.Constants;
 using wx.Shared.Images;
+using wx.Core.Domain.Events;
 
 public static class Extensions
 {

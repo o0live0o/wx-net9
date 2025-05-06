@@ -13,7 +13,7 @@ public class UpdateProductAttrCommandHandler(WxContext context) : IRequestHandle
         var product = await context.Products.Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == request.ProductId) ?? throw new KeyNotFoundException();
 
         product.UpdateAttribute(request.AttrId, request.Value);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
         return true;
     }
 }
