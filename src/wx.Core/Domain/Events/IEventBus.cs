@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace wx.Application.Events;
+namespace wx.Core.Domain.Events;
 
 public interface IEventBus
 {

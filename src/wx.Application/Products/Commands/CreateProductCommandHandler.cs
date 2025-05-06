@@ -24,7 +24,7 @@ public class CreateProductCommandHandler(WxContext context) : IRequestHandler<Cr
         }
 
         context.Products.Add(product);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
         return product;
     }
 }

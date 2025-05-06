@@ -24,7 +24,7 @@ public class UpdateProductCommandHandler(WxContext context) : IRequestHandler<Up
             brand: newBrand
         );
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveEntitiesAsync(cancellationToken);
         return true;
     }
 }

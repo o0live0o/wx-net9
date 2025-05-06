@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using wx.Core.Entities;
@@ -10,17 +11,23 @@ namespace wx.Infrastructure;
 public class WxContext : DbContext, IUnitOfWork
 {
     private IDbContextTransaction _currentTransaction;
+    private readonly IMediator _mediator;
 
-    public WxContext(DbContextOptions<WxContext> options) : base(options) { }
+    public WxContext(DbContextOptions<WxContext> options, IMediator mediator) : base(options)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
 
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Product> Products { get; set; }
 
     public bool HasActiveTransaction => _currentTransaction != null;
 
-    public Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _mediator.DispatchDomainEventsAsync(this);
+        _ = await base.SaveChangesAsync(cancellationToken);
+        return true;
     }
 
     public async Task<IDbContextTransaction> BeginTransactionAsync()

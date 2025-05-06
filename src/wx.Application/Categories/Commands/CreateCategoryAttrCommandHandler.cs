@@ -11,7 +11,7 @@ public class CreateCategoryAttrCommandHandler(WxContext context) : IRequestHandl
 
         var attribute = category.AddAttribute(request.Attr.Name);
 
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
 
         return CategoryAttrDto.FromEntity(attribute); ;
     }

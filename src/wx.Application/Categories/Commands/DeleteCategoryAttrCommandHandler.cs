@@ -6,7 +6,7 @@ public record DeleteCategoryAttrCommandHandler(WxContext context) : IRequestHand
     {
         var category = await context.Categories.Include(p => p.Attributes).SingleOrDefaultAsync(p => p.Id == request.CatrgoryId) ?? throw new KeyNotFoundException();
         category.DeleteAttribute(request.AttrId);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
         return true;
     }
 }

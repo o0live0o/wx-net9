@@ -8,7 +8,7 @@ public class UpdateCategoryAttrCommandHandler(WxContext context) : IRequestHandl
             throw new KeyNotFoundException();
         
         category.UpdateAttribute(request.AttrId, request.AttrName);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
         return true;
     }
 }

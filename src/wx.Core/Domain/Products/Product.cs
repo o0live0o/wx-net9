@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
+using wx.Core.Domain.Events;
 using wx.Core.Enums;
 
 namespace wx.Core.Entities;
@@ -39,6 +40,7 @@ public class Product : Entity, IAggregateRoot
         BrandModel = brand;
         ValidateProductFields();
         Version = 1;
+        AddProductCreatedDomainEvent();
     }
 
     public ProductAttribute SetAttribute(string key, string value)
@@ -110,5 +112,11 @@ public class Product : Entity, IAggregateRoot
     {
         _images.Add(new ProductImage(url));
         Version++;
+    }
+
+    private void AddProductCreatedDomainEvent()
+    {
+        var @event = new ProductCreatedEvent(Guid.NewGuid(), this);
+        this.AddDomainEvent(@event);
     }
 }

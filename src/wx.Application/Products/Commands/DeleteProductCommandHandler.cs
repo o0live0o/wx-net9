@@ -13,7 +13,7 @@ public class DeleteProductCommandHandler(WxContext context) : IRequestHandler<De
 
         context.Products.Remove(product);
 
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
 
         return true;
     }

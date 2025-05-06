@@ -11,7 +11,7 @@ public class DeleteCategoryCommandHandler(WxContext context) : IRequestHandler<D
             ?? throw new KeyNotFoundException();
 
         context.Categories.Remove(category);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
 
         return true;
     }

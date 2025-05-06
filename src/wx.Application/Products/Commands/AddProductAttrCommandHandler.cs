@@ -14,7 +14,7 @@ public class AddProductAttrCommandHandler(WxContext context) : IRequestHandler<A
             throw new KeyNotFoundException();
 
         var attr = product.SetAttribute(request.Key, request.Value);
-        await context.SaveChangesAsync();
+        await context.SaveEntitiesAsync();
         return new ProductAttributeDto() { AttrId = attr.Id, Key  = attr.Key, Value = attr.Value };
     }
 }
