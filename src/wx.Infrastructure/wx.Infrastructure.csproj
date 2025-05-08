@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\wx.Core\wx.Core.csproj" />
+    <ProjectReference Include="..\wx.Shared\wx.Shared.csproj" />
   </ItemGroup>
 
 </Project>

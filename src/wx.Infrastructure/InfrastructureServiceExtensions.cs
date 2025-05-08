@@ -54,7 +54,7 @@ public static class InfrastructureServiceExtensions
 
         try
         {
-            await dbContext.Database.MigrateAsync();
+            //await dbContext.Database.MigrateAsync();
 
             if (!await dbContext.Categories.AnyAsync(c => c.Id == 1))
             {

@@ -7,6 +7,7 @@
     <ProjectGuid>9aab221b-2558-43ad-b1fe-f8beccf2c948</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="docker-compose.elk.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

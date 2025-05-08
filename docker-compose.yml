@@ -54,6 +54,18 @@ services:
         condition: service_healthy
     networks:
       - wx-network
+  
+  storage.api:
+    image: ${DOCKER_REGISTRY-}storageapi
+    build:
+      context: .
+      dockerfile: src/Storage.Api/Dockerfile
+    ports:
+      - "8087:8080"
+      - "8088:8081"
+    networks:
+      - wx-network
+    
 
 volumes:
   postgres_data:
