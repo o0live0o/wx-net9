@@ -1,13 +1,19 @@
-@wx.Api_HostAddress = http://localhost:8080
+@wx.Api_HostAddress = https://localhost:7278
 
-GET {{wx.Api_HostAddress}}/Category
-Accept: application/json
-
-###
-POST {{wx.Api_HostAddress}}/Category
+### Get token
+# @name login
+POST {{wx.Api_HostAddress}}/api/identity/login
 Content-Type: application/json
 
 {
-  "name": "电子产品",
-  "parentId": null
+  "username": "string",
+  "password": "string"
 }
+
+
+###
+GET {{wx.Api_HostAddress}}/api/users
+Accept: application/json
+Authorization: Bearer {{login.response.body.$.accessToken}}
+
+

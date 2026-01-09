@@ -3,4 +3,5 @@ global using wx.Core.Entities;
 global using MediatR;
 global using FluentValidation;
 global using Microsoft.EntityFrameworkCore;
-global using wx.Infrastructure;
+global using wx.Core.SeedWork;
+global using wx.Application.Common.Exceptions;

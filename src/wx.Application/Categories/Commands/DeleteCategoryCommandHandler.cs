@@ -1,18 +1,13 @@
-﻿
-using wx.Infrastructure;
+﻿namespace wx.Application.Categories;
 
-namespace wx.Application.Categories;
-
-public class DeleteCategoryCommandHandler(WxContext context) : IRequestHandler<DeleteCategoryCommand, bool>
+public class DeleteCategoryCommandHandler(IRepository<Category> repository) : IRequestHandler<DeleteCategoryCommand, bool>
 {
     public async Task<bool> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await context.Categories.SingleOrDefaultAsync(p => p.Id == request.Id)
+        var category = await repository.GetByIdAsync(request.Id)
             ?? throw new KeyNotFoundException();
 
-        context.Categories.Remove(category);
-        await context.SaveEntitiesAsync();
-
+        await repository.DeleteAsync(category);
         return true;
     }
 }

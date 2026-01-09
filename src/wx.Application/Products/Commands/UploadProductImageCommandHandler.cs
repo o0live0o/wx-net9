@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wx.Infrastructure;
-using wx.Shared.Images;
+﻿using wx.Shared.Images;
 
 namespace wx.Application.Products;
 
-public class UploadProductImageCommandHandler(IFileService fileService, WxContext context) : IRequestHandler<UploadProductImageCommand, bool>
+public class UploadProductImageCommandHandler(IFileService fileService, IRepository<Product> repository) : IRequestHandler<UploadProductImageCommand, bool>
 {
     public async Task<bool> Handle(UploadProductImageCommand request, CancellationToken cancellationToken)
     {
-        var product = await context.Products.FindAsync(request.ProductId)
+        var product = await repository.GetByIdAsync(request.ProductId)
             ?? throw new KeyNotFoundException($"Product {request.ProductId} not found");
 
         string fileName = $"Img{request.ProductId}{Path.GetExtension(request.FileName)}";

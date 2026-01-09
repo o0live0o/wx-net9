@@ -1,17 +1,17 @@
 ﻿namespace wx.Application.Categories;
 
-public class CreateCategoryAttrCommandHandler(WxContext context) : IRequestHandler<CreateCategoryAttrCommand, CategoryAttrDto>
+public class CreateCategoryAttrCommandHandler(IRepository<Category> repository) : IRequestHandler<CreateCategoryAttrCommand, CategoryAttrDto>
 {
     public async Task<CategoryAttrDto> Handle(CreateCategoryAttrCommand request, CancellationToken cancellationToken)
     {
-        var category = await context.Categories.Include(c => c.Attributes).SingleOrDefaultAsync(p => p.Id == request.CategoryId);
+        var category = await repository.GetByIdAsync(request.CategoryId);
 
         if (category == null)
             throw new KeyNotFoundException();
 
         var attribute = category.AddAttribute(request.Attr.Name);
 
-        await context.SaveEntitiesAsync();
+        await repository.UpdateAsync(category,cancellationToken);
 
         return CategoryAttrDto.FromEntity(attribute); ;
     }

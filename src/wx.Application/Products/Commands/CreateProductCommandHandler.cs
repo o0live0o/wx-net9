@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using wx.Infrastructure;
 
 namespace wx.Application.Products;
 
-public class CreateProductCommandHandler(WxContext context) : IRequestHandler<CreateProductCommand, Product>
+public class CreateProductCommandHandler(IRepository<Product> repository) : IRequestHandler<CreateProductCommand, Product>
 {
     public async Task<Product> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
@@ -22,9 +21,7 @@ public class CreateProductCommandHandler(WxContext context) : IRequestHandler<Cr
                 product.SetAttribute(attr.Key, attr.Value);
             }
         }
-
-        context.Products.Add(product);
-        await context.SaveEntitiesAsync();
+        await repository.AddAsync(product);
         return product;
     }
 }

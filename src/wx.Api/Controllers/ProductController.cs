@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using wx.Application.Common.Models;
 using wx.Application.Products;
 using wx.Application.Products.Commands;
-using wx.Core;
 using wx.Core.Entities;
 
 namespace wx.Api.Controllers;

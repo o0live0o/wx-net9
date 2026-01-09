@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using wx.Api.Controllers;
+using wx.Application.Common.Models;
 using wx.Application.Products;
-using wx.Core;
 
 namespace wx.Api.Tests;
 

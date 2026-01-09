@@ -1,5 +1,5 @@
 using wx.Application.Categories;
-using wx.Core;
+using wx.Application.Common.Models;
 
 namespace wx.Application.Categories;
 

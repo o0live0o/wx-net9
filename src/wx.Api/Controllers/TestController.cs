@@ -2,7 +2,8 @@
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Text;
-using wx.Infrastructure.LLM;
+using wx.Application.Common.Services.Dtos;
+using wx.Infrastructure.Services.LLM;
 
 namespace wx.Api.Controllers;
 

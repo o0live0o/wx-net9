@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using wx.Application.Categories;
-using wx.Core;
+using wx.Application.Common.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace wx.Api.Controllers;

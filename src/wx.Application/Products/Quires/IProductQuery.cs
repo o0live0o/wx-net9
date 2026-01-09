@@ -1,4 +1,6 @@
-﻿namespace wx.Application.Products;
+﻿using wx.Application.Common.Models;
+
+namespace wx.Application.Products;
 
 public interface IProductQuery
 {

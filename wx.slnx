@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".filenesting.json" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/wx.Api/wx.Api.csproj" />
+    <Project Path="src/wx.Application/wx.Application.csproj" />
+    <Project Path="src/wx.Core/wx.Core.csproj" />
+    <Project Path="src/wx.Infrastructure/wx.Infrastructure.csproj" />
+    <Project Path="src/wx.Shared/wx.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/wx.Api.Tests/wx.Api.Tests.csproj" />
+    <Project Path="tests/wx.Shared.Tests/wx.Shared.Tests.csproj" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

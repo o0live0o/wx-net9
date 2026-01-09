@@ -7,48 +7,60 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using wx.Infrastructure;
 
 namespace wx.Application.Behaviors
 {
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
         private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
-        private readonly WxContext _dbContext;
-        public TransactionBehavior(WxContext dbContext,
+        private readonly IUnitOfWork _unitOfWork;
+        public TransactionBehavior(IUnitOfWork unitOfWork,
         ILogger<TransactionBehavior<TRequest, TResponse>> logger)
         {
-            _dbContext = dbContext ?? throw new ArgumentException(nameof(dbContext));
+            _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentException(nameof(ILogger));
         }
+        
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var response = default(TResponse);
-            if (_dbContext.HasActiveTransaction)
+            if (_unitOfWork.HasActiveTransaction)
             {
                 return await next();
             }
 
-            var strategy = _dbContext.Database.CreateExecutionStrategy();
+            // var strategy = _dbContext.Database.CreateExecutionStrategy();
 
-            await strategy.ExecuteAsync(async () =>
+            // await strategy.ExecuteAsync(async () =>
+            // {
+            //     Guid transactionId;
+
+            //     await using var transaction = await _dbContext.BeginTransactionAsync();
+            //     using (_logger.BeginScope(new List<KeyValuePair<string, object>> { new("TransactionContext", transaction.TransactionId) }))
+            //     {
+            //         _logger.LogInformation("Begin transaction {TransactionId} for {CommandName} ({@Command})", transaction.TransactionId, "", request);
+            //         response = await next();
+
+            //         _logger.LogInformation("Commit transaction {TransactionId} for {CommandName}", transaction.TransactionId, "");
+
+            //         await _dbContext.CommitTransactionAsync(transaction);
+
+            //         transactionId = transaction.TransactionId;
+            //     }
+            // });
+            response = await _unitOfWork.ExecuteTransactionalAsync(async () =>
             {
-                Guid transactionId;
+                var transactionId = _unitOfWork.CurrentTransactionId;
+                _logger.LogInformation("Begin transaction {TransactionId} for {CommandName} ({@Command})", transactionId, "", request);
 
-                await using var transaction = await _dbContext.BeginTransactionAsync();
-                using (_logger.BeginScope(new List<KeyValuePair<string, object>> { new("TransactionContext", transaction.TransactionId) }))
-                {
-                    _logger.LogInformation("Begin transaction {TransactionId} for {CommandName} ({@Command})", transaction.TransactionId, "", request);
-                    response = await next();
+                var response = await next();
 
-                    _logger.LogInformation("Commit transaction {TransactionId} for {CommandName}", transaction.TransactionId, "");
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                    await _dbContext.CommitTransactionAsync(transaction);
+                _logger.LogInformation("Commit transaction {TransactionId} for {CommandName}", transactionId, "");
 
-                    transactionId = transaction.TransactionId;
-                }
-
-            });
+                return response;
+            }, cancellationToken);
             return response;
         }
     }

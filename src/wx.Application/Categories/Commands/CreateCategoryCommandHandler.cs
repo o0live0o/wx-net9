@@ -2,15 +2,8 @@ using wx.Core.SeedWork;
 
 namespace wx.Application.Categories;
 
-public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDto>
+public class CreateCategoryCommandHandler(IRepository<Category> repository) : IRequestHandler<CreateCategoryCommand, CategoryDto>
 {
-    private IRepository<Category> _repository;
-
-    public CreateCategoryCommandHandler(IRepository<Category> repository)
-    {
-        _repository = repository;
-    }
-
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         Category category = new Category(request.Name, request.ParentId);
@@ -22,9 +15,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
                 category.AddAttribute(attr.Name);
             }
         }
-        _repository.Add(category);
-        await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-
+        await repository.AddAsync(category);
         return CategoryDto.FromEntity(category);
     }
 }

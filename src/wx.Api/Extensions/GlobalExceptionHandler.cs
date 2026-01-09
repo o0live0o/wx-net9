@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using wx.Application.Common.Exceptions;
 
 namespace wx.Api.Extensions;
 
@@ -13,6 +14,8 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             KeyNotFoundException ex => HandleKeyNotFoundException(ex, httpContext),
             ValidationException ex => HandleValidationException(ex, httpContext),
+            BadRequestException ex => HandleBadRequestException(ex, httpContext),
+            ConflictException ex => HandleConflictException(ex, httpContext),
             _ => HandleUnhandleException(exception, httpContext)
 
         };
@@ -74,4 +77,29 @@ public class GlobalExceptionHandler : IExceptionHandler
             Type = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/errors/internal-server-error"
         };
     }
+
+    private ProblemDetails HandleBadRequestException(BadRequestException ex, HttpContext httpContext)
+    {
+        return new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "Bad Request",
+            Detail = ex.Message,
+            Instance = httpContext.Request.Path,
+            Type = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/errors/bad-request"
+        };
+    }
+    
+    private ProblemDetails HandleConflictException(ConflictException ex, HttpContext httpContext)
+    {
+        return new ProblemDetails
+        {
+            Status = StatusCodes.Status409Conflict,
+            Title = "Conflict",
+            Detail = ex.Message,
+            Instance = httpContext.Request.Path,
+            Type = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/errors/conflict"
+        };
+    }
+
 }

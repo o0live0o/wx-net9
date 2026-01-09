@@ -1,15 +1,15 @@
-﻿using FluentValidation;
-using NSwag.Generation.Processors.Security;
+using FluentValidation;
 using NSwag;
+using NSwag.Generation.Processors.Security;
+using Polly;
+using Polly.Retry;
+using System.Net;
 using wx.Application.Behaviors;
-using wx.Application.Categories;
-using wx.Application.Events;
-using wx.Application.Products;
-using wx.Application.Stock;
+using wx.Application.Common.Constants;
 using wx.Application.Stock.Create;
-using wx.Core.Constants;
-using wx.Shared.Images;
 using wx.Core.Domain.Events;
+using wx.Infrastructure.BackgroundJobs;
+using wx.Shared.Images;
 
 public static class Extensions
 {
@@ -22,8 +22,8 @@ public static class Extensions
             cfg.RegisterServicesFromAssemblyContaining(typeof(CreateStockCommand));
             cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
         });
-        builder.Services.AddSingleton<IValidator<CreateStockCommand>, CreateStockCommandValidator>();
-        builder.Services.AddSingleton<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
+        // builder.Services.AddSingleton<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
+        builder.RegisterValidators();
 
         builder.Services.AddScoped<IFileService, FileService>();
         builder.Services.AddSingleton<IEventBus, EventBus>();
@@ -33,15 +33,31 @@ public static class Extensions
 
     }
 
+    private static ValueTask<bool> HandleTransientHttpError(Outcome<HttpResponseMessage> outcome) => outcome switch
+    {
+        { Exception: HttpRequestException } => PredicateResult.True(),
+        { Result.StatusCode: HttpStatusCode.RequestTimeout } => PredicateResult.True(),
+        { Result.StatusCode: >= HttpStatusCode.InternalServerError } => PredicateResult.True(),
+        _ => PredicateResult.False()
+    };
+
+    private static RetryStrategyOptions<HttpResponseMessage> GetRetryOptions() =>
+    new()
+    {
+        ShouldHandle = args => HandleTransientHttpError(args.Outcome),
+        MaxRetryAttempts = 3,
+        BackoffType = DelayBackoffType.Exponential,
+        Delay = TimeSpan.FromSeconds(2)
+    };
+
     public static void AddQueryService(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
-        builder.Services.AddScoped<IProductQuery, ProductQuery>();
+
     }
 
     public static void RegisterHttpClient(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddHttpClient(CoreConstant.HTTP_CLIENT_NORMAL).AddStandardResilienceHandler();
+        builder.Services.AddHttpClient(HttpConstant.HTTP_CLIENT_NORMAL).AddStandardResilienceHandler();
     }
 
     public static void ConfigOpenApiDoc(this IHostApplicationBuilder builder)
@@ -82,5 +98,29 @@ public static class Extensions
     public static void AddCustomResilience(this IHostApplicationBuilder builder)
     {
 
+    }
+
+    public static void RegisterValidators(this IHostApplicationBuilder builder)
+    {
+        var assemblies = new[]
+        {
+            typeof(CreateStockCommand).Assembly, 
+        };
+
+        foreach (var assembly in assemblies)
+        {
+            var validatorTypes = assembly.GetTypes()
+                .Where(t => t.IsClass && !t.IsAbstract)
+                .SelectMany(t => t.GetInterfaces()
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>))
+                    .Select(i => new { ValidatorType = t, ValidatedType = i.GetGenericArguments()[0] }))
+                .ToList();
+
+            foreach (var validator in validatorTypes)
+            {
+                var serviceType = typeof(IValidator<>).MakeGenericType(validator.ValidatedType);
+                builder.Services.AddSingleton(serviceType, validator.ValidatorType);
+            }
+        }
     }
 }

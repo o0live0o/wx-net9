@@ -4,19 +4,13 @@ namespace wx.Core.SeedWork;
 
 public interface IRepository<TEntity> where TEntity : IAggregateRoot 
 {
-    IUnitOfWork UnitOfWork { get; }
+    Task<TEntity> GetByIdAsync(int id);
 
-    Task<IEnumerable<TEntity>> QueryAsync();
+    Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity,bool>> predicate);
 
-    Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity,bool>> predicate);
+    Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 
-    Task<TEntity> QueryFirstAsync();
+    Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
 
-    Task<TEntity> QueryFirstAsync(int id);
-
-    void Remove(TEntity entity);
-
-    void Add(TEntity entity);
-
-    void Add(IEnumerable<TEntity> entities);
+    Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 }

@@ -4,16 +4,16 @@ namespace wx.Core.SeedWork;
 
 public abstract class Entity
 {
-    int _Id;
+    int _id;
     public virtual int Id
     {
         get
         {
-            return _Id;
+            return _id;
         }
-        protected set
+        set
         {
-            _Id = value;
+            _id = value;
         }
     }
 

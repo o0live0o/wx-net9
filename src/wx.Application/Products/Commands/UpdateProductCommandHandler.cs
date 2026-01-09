@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using wx.Infrastructure;
+﻿namespace wx.Application.Products;
 
-namespace wx.Application.Products;
-
-public class UpdateProductCommandHandler(WxContext context) : IRequestHandler<UpdateProductCommand, bool>
+public class UpdateProductCommandHandler(IRepository<Product> repository) : IRequestHandler<UpdateProductCommand, bool>
 {
     public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await context.Products.Include(i => i.Attributes).SingleOrDefaultAsync(p => p.Id == request.Id);
+        var product = await repository.GetByIdAsync(request.Id);
         if (product == null) throw new KeyNotFoundException($"Id: {request.Id} Not Found.");
 
         ProductBrandVO newBrand = null;
@@ -24,7 +21,7 @@ public class UpdateProductCommandHandler(WxContext context) : IRequestHandler<Up
             brand: newBrand
         );
 
-        await context.SaveEntitiesAsync(cancellationToken);
+        await repository.UpdateAsync(product);
         return true;
     }
 }

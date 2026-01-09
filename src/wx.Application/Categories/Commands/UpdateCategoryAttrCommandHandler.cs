@@ -1,14 +1,14 @@
 ﻿namespace wx.Application.Categories;
 
-public class UpdateCategoryAttrCommandHandler(WxContext context) : IRequestHandler<UpdateCategoryAttrCommand, bool>
+public class UpdateCategoryAttrCommandHandler(IRepository<Category> repository) : IRequestHandler<UpdateCategoryAttrCommand, bool>
 {
     public async Task<bool> Handle(UpdateCategoryAttrCommand request, CancellationToken cancellationToken)
     {
-        var category = await context.Categories.SingleOrDefaultAsync(p => p.Id == request.CategoryId) ??
+        var category = await repository.GetByIdAsync(request.CategoryId) ??
             throw new KeyNotFoundException();
         
         category.UpdateAttribute(request.AttrId, request.AttrName);
-        await context.SaveEntitiesAsync();
+        await repository.UpdateAsync(category);
         return true;
     }
 }
