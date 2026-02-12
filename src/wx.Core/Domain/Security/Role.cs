@@ -2,39 +2,39 @@
 
 public class Role : Entity, IAggregateRoot
 {
-    public string Code { get; private set; }
+    public string Code { get; private set; } = null!;
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
 
     public bool IsActive { get; private set; } = true;
 
-    private List<Menu> _menus = new List<Menu>();
+    private ICollection<RolePermission> _rolePermissions = new List<RolePermission>();
 
-    public IReadOnlyCollection<Menu> Menus => _menus;
+    public IReadOnlyCollection<RolePermission> RolePermissions => _rolePermissions.ToList().AsReadOnly();
 
-    private List<Permission> _permissions = new List<Permission>();
+    private ICollection<RoleMenu> _roleMenus = new List<RoleMenu>();
 
-    public IReadOnlyCollection<Permission> Permissions => _permissions;
+    public IReadOnlyCollection<RoleMenu> RoleMenus => _roleMenus.ToList().AsReadOnly();
 
     private Role()
     {
     }
 
-    public void AddMenu(Menu menu)
-    {
-        if (_menus.Contains(menu)) return;
-        _menus.Add(menu);
-    }
-
-    public void AddPermission(Permission permission)
-    {
-        if (_permissions.Contains(permission)) return;
-        _permissions.Add(permission);
-    }
-
     public void Deactive()
     {
         IsActive = false;
+    }
+
+    public void AssignPermission(int permissionId)
+    {
+        if (_rolePermissions.Any(p => p.PermissionId == permissionId)) return;
+        _rolePermissions.Add(RolePermission.Create(Id, permissionId));
+    }
+
+    public void AssignMenu(int menuId)
+    {
+        if (_roleMenus.Any(p => p.MenuId == menuId)) return;
+        _roleMenus.Add(RoleMenu.Create(Id, menuId));
     }
 
     public static Role Create(string code, string name)

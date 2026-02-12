@@ -12,7 +12,7 @@ internal static class MongoDbConfiguration
         {
             cm.AutoMap();
             //cm.MapIdMember(u => u.Id);
-            cm.UnmapProperty(u => u.Roles);
+            //cm.UnmapProperty(u => u.Roles);
             cm.UnmapField("_roles");
             cm.SetIsRootClass(true);
             cm.SetIgnoreExtraElements(true);
@@ -22,8 +22,8 @@ internal static class MongoDbConfiguration
         {
             cm.AutoMap();
             //cm.MapIdMember(u => u.Id);
-            cm.UnmapProperty(u => u.Menus);
-            cm.UnmapProperty(u => u.Permissions);
+            //cm.UnmapProperty(u => u.Menus);
+            //cm.UnmapProperty(u => u.Permissions);
             cm.UnmapField("_menus");
             cm.UnmapField("_permissions");
             cm.SetIsRootClass(true);

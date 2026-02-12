@@ -9,7 +9,7 @@ public class AssignPermissionCommandValidator : AbstractValidator<AssignPermissi
     public AssignPermissionCommandValidator()
     {
         RuleFor(x => x.RoleId).NotNull().Must(a => a > 0);
-        
+
         RuleFor(x => x.PermissionIds)
             .NotNull().WithMessage("PermissionIds不能为空")
             .Must(a => a.Length > 0).WithMessage("至少提供一个 PermissionId")
@@ -30,17 +30,17 @@ public class AssignPermissionCommandHandler(IRoleRepository repository, IPermiss
         var permissions = await permissionRepository.GetAsync(p => request.PermissionIds.Contains(p.Id));
 
         var foundIds = permissions.Select(p => p.Id).ToHashSet();
-        
+
         var missing = request.PermissionIds.Select(p => !foundIds.Contains(p)).ToArray();
         if (missing.Length > 0)
             throw new BadRequestException($"Permissions not found: {string.Join(',', missing)}");
 
-        foreach (var permission in permissions)
+        foreach (var permissionId in request.PermissionIds)
         {
-            role.AddPermission(permission);    
+            role.AssignPermission(permissionId);
         }
-        
-        await repository.UpdateAsync(role);
+
+        await repository.UpdateAsync(role, cancellationToken);
         return Unit.Value;
     }
 }

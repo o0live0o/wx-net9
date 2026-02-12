@@ -1,5 +1,4 @@
-﻿
-using wx.Core.Domain.Security;
+﻿using wx.Core.Domain.Security;
 
 namespace wx.Application.Security.Roles;
 

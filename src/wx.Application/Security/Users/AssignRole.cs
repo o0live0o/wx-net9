@@ -25,7 +25,7 @@ public class AssignRolesCommandHandler(IUserRepository repository, IRoleReposito
 
         if (user == null)
             throw new BadRequestException($"User: {request.UserId} not found.");
-        
+
         var roleIdSet = request.RoleIds.ToHashSet();
         var roles = await roleRepository.GetAsync(p => roleIdSet.Contains(p.Id));
 
@@ -35,12 +35,12 @@ public class AssignRolesCommandHandler(IUserRepository repository, IRoleReposito
         if (missingIds.Length > 0)
             throw new BadRequestException($"Role not found: {string.Join(',', missingIds)}");
 
-        foreach (var role in roles)
+        foreach (var roleId in request.RoleIds)
         {
-            user.AssignRole(role);
+            user.AssignRole(roleId);
         }
+        await repository.UpdateAsync(user, cancellationToken);
 
-        await repository.UpdateAsync(user);
         return Unit.Value;
     }
 }

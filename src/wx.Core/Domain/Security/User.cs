@@ -1,18 +1,19 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace wx.Core.Domain.Security;
 
 public class User : Entity, IAggregateRoot
 {
-    public string Account { get; private set; }
+    public string Account { get; init; } = null!;
 
-    public string Password { get; private set; }
+    public string Password { get; private set; } = null!;
 
     public bool IsActive { get; private set; } = true;
 
-    private List<Role> _roles = new List<Role>();
+    private ICollection<UserRole> _userRoles = new Collection<UserRole>();
 
-    public ReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
+    public IReadOnlyCollection<UserRole> UserRoles => _userRoles.ToList().AsReadOnly();
 
     private User() { }
 
@@ -21,22 +22,24 @@ public class User : Entity, IAggregateRoot
         IsActive = true;
     }
 
-    public void AssignRole(Role role)
-    {
-        if (_roles.Contains(role)) return;
-        _roles.Add(role);
-    }
-
     public void Deactivate()
     {
         IsActive = false;
     }
 
+    public void AssignRole(int roleId)
+    {
+        if(_userRoles.Any(p => p.RoleId == roleId)) return;
+        _userRoles.Add(UserRole.Create(Id, roleId));
+    }
+
     public static User Create(string account, string password)
     {
-        var user = new User();
-        user.Account = account;
-        user.Password = password;
+        var user = new User
+        {
+            Account = account,
+            Password = password,
+        };
         return user;
     }
 }

@@ -65,18 +65,18 @@ public class IdentityService : IIdentityService
             new Claim(ClaimTypes.Name, user.Account),
         };
 
-        foreach (var role in user.Roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role.Name));
-        }
+        //foreach (var role in user.Roles)
+        //{
+        //    claims.Add(new Claim(ClaimTypes.Role, role.Name));
+        //}
 
         expiresAt = DateTime.UtcNow.AddMinutes(_tokenOptions.ExpireMinutes);
-        var permissions = user.Roles.SelectMany(p => p.Permissions.Select(p => p.Code));
+        //var permissions = user.Roles.SelectMany(p => p.Permissions.Select(p => p.Code));
 
-        foreach (var permission in permissions)
-        {
-            claims.Add(new Claim("permission", permission));
-        }
+        //foreach (var permission in permissions)
+        //{
+        //    claims.Add(new Claim("permission", permission));
+        //}
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenOptions.SecretKey));
         var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
